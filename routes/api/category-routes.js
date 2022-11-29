@@ -1,28 +1,36 @@
 const router = require('express').Router();
-const { Category, Product } = require('../../models');
+const { Category, Product, Category } = require('../../models');
+
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
-  Categories.findAll().then((CategoriesData) => {
-    res.json(CategoriesData);
-  })
-  // find all categories
-  // be sure to include its associated Products
-});
+router.get('/', async (req, res) => {
+  try {
+    const allCategories = await Category.findAll({
+      include: [{Product}]
+    })
+    res.json(allCategories)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}),
+  
 
-router.get('/:id', (req, res) => {
-  Categories.findOne().then((CategoriesData) => {
-    res.json(CategoriesData)
-  })
-  // find one category by its `id` value
-  // be sure to include its associated Products
-});
+router.get('/:id', async (req, res) => {
+  try {
+    const Category = await Category.findOne({
+      include: [{Product}]
+    })
+    res.json(Category)
+  } catch (err) {
+      res.status(500).json(err)
+  }
+}), 
 
 router.post('/', async (req, res) => {
   try {
-    const CategoriesData = await Categories.create(req.body);
-    res.status(200).json(CategoriesData);
+    const CategoryData = await Category.create(req.body);
+    res.status(200).json(CategoryData);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -32,8 +40,8 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const CategoriesData = await Categories.update(req.body);
-    res.status(200).json(CategoriesData);
+    const CategoryData = await Category.update(req.body);
+    res.status(200).json(CategoryData);
   } catch (err) {
     res.status(400).json(err)
   }
@@ -42,8 +50,8 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const CategoriesData = await Categories.destroy(req.body);
-    res.status(200).json(CategoriesData);
+    const CategoryData = await Category.destroy(req.body);
+    res.status(200).json(CategoryData);
   } catch (err) {
     res.status(400).json(err)
   }
