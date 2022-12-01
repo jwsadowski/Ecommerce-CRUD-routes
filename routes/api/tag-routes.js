@@ -4,7 +4,7 @@ const { Tag, Product, ProductTag } = require('../../models');
 // The `/api/tags` endpoint
 
 router.get('/', (req, res) => {
-  Tags.findAll().then((TagsData) => {
+  Tag.findAll().then((TagsData) => {
     res.json(TagsData);
   })
   // find all tags
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  Tags.findOne().then((TagsData) => {
+  Tag.findOne().then((TagsData) => {
     res.json(TagsData)
   })
   // find a single tag by its `id`
@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const TagsData = await Tags.create(req.body);
+    const TagsData = await Tag.create(req.body);
     res.status(200).json(TagsData);
   } catch (err) {
     res.status(400).json(err);
@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const TagsData = await Tags.update(req.body);
+    const TagsData = await Tag.update(req.body);
     res.status(200).json(TagsData);
   } catch (err) {
     res.status(400).json(err);
@@ -41,7 +41,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const TagsData = await Tags.destroy(req.body);
+    const TagsData = await Tag.destroy(req.body);
     res.status(200).json(TagsData);
   } catch (err) {
     res.status(400).json(err)
