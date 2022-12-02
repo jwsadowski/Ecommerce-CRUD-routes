@@ -20,7 +20,10 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findOne({
-      include: [{model: Tag}]
+      include: [{model: Tag}],
+      where: {
+        id: req.params.id
+      }
     })
     res.json(product)
   } catch (err) {

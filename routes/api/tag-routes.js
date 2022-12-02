@@ -1,28 +1,37 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag } = require('../../models');
+const { Tag, Product } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', (req, res) => {
-  Tag.findAll().then((TagsData) => {
-    res.json(TagsData);
-  })
-  // find all tags
-  // be sure to include its associated Product data
-});
+router.get('/', async (req, res) => {
+  try {
+    const allTags = await Tag.findAll({
+      include: [{model: Product}]
+    })
+    res.json(allTags)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}),
 
-router.get('/:id', (req, res) => {
-  Tag.findOne().then((TagsData) => {
-    res.json(TagsData)
-  })
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
-});
+router.get('/:id', async (req, res) => { 
+  try{
+    const tag = await Tag.findOne({
+      include: [{model: Product}],
+      where: {
+        id: req.params.id
+      }
+    })
+    res.json(tag)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}),
 
 router.post('/', async (req, res) => {
   try {
-    const TagsData = await Tag.create(req.body);
-    res.status(200).json(TagsData);
+    const tagsData = await Tag.create(req.body);
+    res.status(200).json(tagsData);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -31,8 +40,12 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const TagsData = await Tag.update(req.body);
-    res.status(200).json(TagsData);
+    const tagsData = await Tag.update(req.body, {
+      where: {
+        id: req.params.id
+      }
+    });
+    res.status(200).json(tagsData);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -41,8 +54,12 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const TagsData = await Tag.destroy(req.body);
-    res.status(200).json(TagsData);
+    const tagsData = await Tag.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    res.status(200).json(tagsData);
   } catch (err) {
     res.status(400).json(err)
   }
